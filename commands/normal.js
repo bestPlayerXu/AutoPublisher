@@ -15,10 +15,6 @@ module.exports = [
         }, {
           name: 'Join the support server!',
           value: '[Join here!](https://discord.gg/NYCvrdedWz)'
-        }, {
-          name: 'Donate for the free bot!',
-          value: '[Patreon](https://www.patreon.com/AutoPublisherDiscordBot)',
-          inline: true
         }]
       }
     }
@@ -32,23 +28,21 @@ module.exports = [
     sName: 'View',
     sDescription: 'View announcement channels + check if I have enough permissions',
     fExecute: dataModel => {
-      var channels = dataModel.announcements.map(a => {
-        var perm = dataModel.message.guild.me.permissionsIn(dataModel.client.channels.cache.get(a));
-        var permstring = ['READ_MESSAGES', 'SEND_MESSAGES', 'MANAGE_MESSAGES'];
-        var iStatus, sDetail;
-        if (perm.has('VIEW_CHANNEL')) {
-          permstring = permstring.filter(p => !p.startsWith('R'));
+      var channels = dataModel.guild.announcements.map(a => {
+        var ownedPermissions = dataModel.message.guild.me.permissionsIn(dataModel.client.channels.cache.get(a));
+        var neededPermissions = [ 'READ_MESSAGES', 'SEND_MESSAGES', 'MANAGE_MESSAGES' ];
+        var sDetail;
+        if (ownedPermissions.has('VIEW_CHANNEL')) {
+          neededPermissions = neededPermissions.filter(p => !p.startsWith('R'));
         }
-        if (perm.has('SEND_MESSAGES')) {
-          permstring = permstring.filter(p => !p.startsWith('S'));
+        if (ownedPermissions.has('SEND_MESSAGES')) {
+          neededPermissions = neededPermissions.filter(p => !p.startsWith('S'));
         }
-        if (perm.has('MANAGE_MESSAGES')) {
-          permstring = permstring.filter(p => !p.startsWith('M'));
+        if (ownedPermissions.has('MANAGE_MESSAGES')) {
+          neededPermissions = neededPermissions.filter(p => !p.startsWith('M'));
         }
-        if (permstring.length === 0) {
-          iStatus = 2;
-        } else {
-          iStatus = 4;
+				var hasEnoughPermissions = permstring.length === 0;
+        if (permstring.length > 0) {
           sDetail = '(needs: ' + permstring.map(p => '`' + p + '`').join(', ') + ' permissions)';
         }
         return { iID: a, iStatus: iStatus, sDetail: sDetail };
@@ -68,6 +62,12 @@ module.exports = [
           value: notWorkingChannels.map(a => ':x:<#' + a.iID + '>' + a.sDetail)
         });
       }
+			if (dataModel.guild.announcements.length === 0) {
+				fields.push({
+					name: 'No channel added :(',
+					value: 'Add a channel with the `add` command!'
+				});
+			}
       return {
         fields: fields
       };
