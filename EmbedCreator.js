@@ -1,7 +1,5 @@
-//POPS: productize
-
-class embedCreator {
-	embedCreator(bestPlayerAvatar, botAvatar) {
+class EmbedCreator {
+	EmbedCreator(bestPlayerAvatar, botAvatar) {
 		this.bestPlayerAvatar = bestPlayerAvatar;
 		this.botAvatar = botAvatar;
 	}
@@ -36,4 +34,4 @@ class embedCreator {
 	}
 }
 
-module.exports = embedCreator;
+module.exports = EmbedCreator;
