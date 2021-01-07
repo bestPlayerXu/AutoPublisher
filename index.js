@@ -28,11 +28,13 @@ dbl.on('posted', () => {
 var data = JSON.parse(fs.readFileSync('data'));
 console.log(data);
 
+var bestPlayer_xu;
+
 client.on('ready', async () => {
 	setInterval(() => dbl.postStats(client.guilds.cache.size), 1800000);
 	console.log(`Logged in as ${client.user.tag}!`);
-	this.bestPlayer = await client.users.fetch('556593706313187338');
-	this.embedCreator = new EmbedCreator(this.bestPlayer.avatarURL(), client.user.avatarURL());
+	bestPlayer = await client.users.fetch('556593706313187338');
+	this.embedCreator = new EmbedCreator(bestPlayer.avatarURL(), client.user.avatarURL());
 	client.user.setPresence({
 			activity: { 
 					name: 'ap!help',
@@ -131,7 +133,7 @@ client.on('message', async message => {
 		param.shift();
 		param = param.map(p => p.replace(/<@|<#|>/g, '')).filter(p => p.length !== 0);
 
-		var isAdmin = message.member.hasPermission('MANAGE_CHANNELS') || message.author.id === this.bestPlayer.id;
+		var isAdmin = message.member.hasPermission('MANAGE_CHANNELS') || message.author.id === bestPlayer.id;
 		var oCommand = commands.find(c => c.sName.toLowerCase() === command);
 		if (oCommand) {
 			fnExecuteCommand(oCommand, isAdmin, message, param, guild);
