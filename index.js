@@ -10,7 +10,7 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 const fs = require('fs');
 const DBL_API = require('dblapi.js');
-const dbl = new DBL_API(process.env.DBL_TOKEN, client);*
+const dbl = new DBL_API(process.env.DBL_TOKEN, client);
 const EmbedCreator = require('./EmbedCreator.js');
 const adminCommands = require('./commands/admin.js').sort((a, b) => a.sName < b.sName ? -1 : 1);
 const normalCommands = require('./commands/normal.js').sort((a, b) => a.sName < b.sName ? -1 : 1);
