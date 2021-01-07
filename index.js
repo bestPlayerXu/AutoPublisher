@@ -9,8 +9,8 @@ app.get('/', (req, res) => res.sendStatus(200));*/
 const Discord = require('discord.js');
 const client = new Discord.Client();
 const fs = require('fs');
-/*const DBL_API = require('dblapi.js');
-const dbl = new DBL_API(process.env.DBL_TOKEN, client);*/
+const DBL_API = require('dblapi.js');
+const dbl = new DBL_API(process.env.DBL_TOKEN, client);*
 const EmbedCreator = require('./EmbedCreator.js');
 const adminCommands = require('./commands/admin.js').sort((a, b) => a.sName < b.sName ? -1 : 1);
 const normalCommands = require('./commands/normal.js').sort((a, b) => a.sName < b.sName ? -1 : 1);
@@ -18,16 +18,16 @@ adminCommands.forEach(a => a.bAdmin = true);
 normalCommands.forEach(a => a.bAdmin = false);
 
 const commands = adminCommands.concat(normalCommands);
-/*
+
 dbl.on('posted', () => {
 	console.log('Server count posted!');
 });
-*/
+
 var data = JSON.parse(fs.readFileSync('data'));
 console.log(data);
 
 client.on('ready', async () => {
-	//setInterval(() => dbl.postStats(client.guilds.cache.size), 1800000);
+	setInterval(() => dbl.postStats(client.guilds.cache.size), 1800000);
 	console.log(`Logged in as ${client.user.tag}!`);
 	this.bestPlayer = await client.users.fetch('556593706313187338');
 	this.embedCreator = new EmbedCreator(this.bestPlayer.avatarURL(), client.user.avatarURL());
