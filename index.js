@@ -1,10 +1,9 @@
-/*const express = require('express');
+const express = require('express');
 const app = express();
-const port = 3000;
+const port = 5739;
 
 
-app.listen(port, () => console.log(`Example app listening at port ${port}`));
-app.get('/', (req, res) => res.sendStatus(200));*/
+app.listen(port, () => console.log(`Example app listening at port ${port} so kill it with that port.`));
 
 process.title = 'AutoPublisher';
 
