@@ -1,0 +1,28 @@
+{
+  "name": "AutoPublisher",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "refresh": "echo \"Error: no test specified\" && exit 1",
+    "start": "node -r dotenv/config index.js",
+    "stop": "killall AutoPublisher",
+    "update": "sh refresh.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bestPlayerXu/AutoPublisher.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bestPlayerXu/AutoPublisher/issues"
+  },
+  "homepage": "https://github.com/bestPlayerXu/AutoPublisher#readme",
+  "dependencies": {
+    "dblapi.js": "^2.4.1",
+    "discord.js": "^12.5.1",
+    "dotenv": "^8.2.0"
+  }
+}

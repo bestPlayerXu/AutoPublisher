@@ -26,7 +26,6 @@ dbl.on('posted', () => {
 });
 
 var data = JSON.parse(fs.readFileSync('data'));
-console.log(data);
 
 var bestPlayer_xu;
 
