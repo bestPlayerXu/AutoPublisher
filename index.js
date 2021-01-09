@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const port = 5739;
+const startTime = Date.now();
 
 
 app.listen(port, () => console.log(`Example app listening at port ${port} so kill it with that port.`));
@@ -95,7 +96,7 @@ var fnSendHelp = (isAdmin, message, guild) => {
 	}
 	oHelp.fields.push({
 		name: 'Commands',
-			value: fnGetCommandList(normalCommands)
+			value: fnGetCommandList(normalCommands.map(p => p).push({ sName: 'Help', sDescription: 'Sends this message' }).push({ sName: 'Uptime', sDescription: 'Shows the uptime of the bot in seconds' }))
 	});
 	oHelp.fields.push({
 		name: 'Support Server',
@@ -137,6 +138,8 @@ client.on('message', async message => {
 			fnExecuteCommand(oCommand, isAdmin, message, param, guild);
 		} else if (command === 'help') {
 			fnSendHelp(isAdmin, message, guild)
+		} else if (command === 'uptime') {
+			message.channel.send(this.embedCreator.getShort('Bot up for `' + (Date.now() - startTime) + '` seconds.'));
 		} else {
 			message.channel.send(this.embedCreator.getShort('The command `' + command + '` doesn\'t exist.'));
 		}

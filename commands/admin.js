@@ -68,7 +68,8 @@ module.exports = [
 		}
 	}, {
 		sName: 'Setprefix',
-		sDescription: 'Change the prefix of this server.',
+		sHelp: 'The current prefix for this server is `PREFIX`.\n\nChange it with this command together with a new prefix.```e.g.: PREFIXsetprefix ap!```\n=> this sets the prefix to `ap!`',
+		sDescription: 'Changes the prefix of this server.',
 		fExecute: dataModel => {
 			if (dataModel.param.length !== 0) {
 				dataModel.guild.prefix = dataModel.param[0];

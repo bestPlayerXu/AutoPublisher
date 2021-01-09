@@ -41,10 +41,13 @@ module.exports = [
         if (ownedPermissions.has('MANAGE_MESSAGES')) {
           neededPermissions = neededPermissions.filter(p => !p.startsWith('M'));
         }
-				var hasEnoughPermissions = permstring.length === 0;
-        if (permstring.length > 0) {
-          sDetail = '(needs: ' + permstring.map(p => '`' + p + '`').join(', ') + ' permissions)';
-        }
+	var hasEnoughPermissions = neededPermissions.length === 0;
+        if (!hasEnoughPermissions) {
+          sDetail = '(needs: ' + neededPermissions.map(p => '`' + p + '`').join(', ') + ' permissions)';
+	  iStatus = 4;
+        } else {
+		iStatus = 2;
+	}
         return { iID: a, iStatus: iStatus, sDetail: sDetail };
       });
       var workingChannels = channels.filter(c => c.iStatus === 2);
@@ -75,7 +78,7 @@ module.exports = [
   }, {
     sName: 'Prefix',
     sDescription: 'See the current prefix.',
-    sHelp: 'The current prefix for this server is `PREFIX`.\n\nChange it with the `setprefix`` command together with a new prefix.```e.g.: PREFIXsetprefix ap!```\n=> this sets the prefix to `ap!`'
+    sHelp: 'The current prefix for this server is `PREFIX`.'
   }, {
     sName: 'Invite',
     sDescription: 'Get an invite for this bot.',

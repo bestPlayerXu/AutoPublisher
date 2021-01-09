@@ -5,9 +5,10 @@
   "main": "index.js",
   "scripts": {
     "refresh": "echo \"Error: no test specified\" && exit 1",
-    "start": "node -r dotenv/config index.js",
+    "start": "node -r dotenv/config index.js > log.txt",
     "stop": "kill -9 $(/home/Max/Scripts/pidByProgram.sh AutoPublisher)",
-    "update": "sh refresh.sh"
+    "update": "sh refresh.sh>",
+    "restart": "sh restart.sh"
   },
   "repository": {
     "type": "git",
