@@ -8,7 +8,8 @@
     "start": "node -r dotenv/config index.js > log.txt",
     "stop": "kill -9 $(/home/Max/Scripts/pidByProgram.sh AutoPublisher)",
     "update": "sh refresh.sh>",
-    "restart": "sh restart.sh"
+    "restart": "sh restart.sh",
+    "test": "node -r dotenv/config test.js > test_log.txt"
   },
   "repository": {
     "type": "git",

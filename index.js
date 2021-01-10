@@ -11,8 +11,8 @@ process.title = 'AutoPublisher';
 const Discord = require('discord.js');
 const client = new Discord.Client();
 const fs = require('fs');
-const DBL_API = require('dblapi.js');
-const dbl = new DBL_API(process.env.DBL_TOKEN, client);
+//const DBL_API = require('dblapi.js');
+//const dbl = new DBL_API(process.env.DBL_TOKEN, client);
 const EmbedCreator = require('./EmbedCreator.js');
 const adminCommands = require('./commands/admin.js').sort((a, b) => a.sName < b.sName ? -1 : 1);
 const normalCommands = require('./commands/normal.js').sort((a, b) => a.sName < b.sName ? -1 : 1);
@@ -21,16 +21,16 @@ normalCommands.forEach(a => a.bAdmin = false);
 
 const commands = adminCommands.concat(normalCommands);
 
-dbl.on('posted', () => {
-	console.log('Server count posted!');
-});
+//dbl.on('posted', () => {
+//	console.log('Server count posted!');
+//});
 
 var data = JSON.parse(fs.readFileSync('data'));
 
 var bestPlayer_xu;
 
 client.on('ready', async () => {
-	setInterval(() => dbl.postStats(client.guilds.cache.size), 1800000);
+//	setInterval(() => dbl.postStats(client.guilds.cache.size), 1800000);
 	console.log(`Logged in as ${client.user.tag}!`);
 	bestPlayer = await client.users.fetch('556593706313187338');
 	this.embedCreator = new EmbedCreator(bestPlayer.avatarURL(), client.user.avatarURL());
@@ -94,9 +94,12 @@ var fnSendHelp = (isAdmin, message, guild) => {
 			value: fnGetCommandList(adminCommands)
 		});
 	}
+	var commandlist = normalCommands.map(p => p);
+	commandlist.push({ sName: 'Help', sDescription: 'Sends this message.' });
+	commandlist.push({ sName: 'Uptime', sDescription: 'Shows the uptime of the bot in seconds' });
 	oHelp.fields.push({
 		name: 'Commands',
-			value: fnGetCommandList(normalCommands.map(p => p).push({ sName: 'Help', sDescription: 'Sends this message' }).push({ sName: 'Uptime', sDescription: 'Shows the uptime of the bot in seconds' }))
+			value: fnGetCommandList(commandlist)
 	});
 	oHelp.fields.push({
 		name: 'Support Server',
@@ -126,20 +129,20 @@ client.on('message', async message => {
 		}
 		return;
 	}
-	if (message.content.startsWith(guild.prefix) && !message.author.bot) {
+	if (message.content.startsWith(guild.prefix) && (!message.author.bot || message.author.id === client.user.id)) { //enabled for testing commands
 		var command = message.content.substring(guild.prefix.length).split(' ')[0].toLowerCase();
 		var param = message.content.split(/ |\n/g);
 		param.shift();
 		param = param.map(p => p.replace(/<@|<#|>/g, '')).filter(p => p.length !== 0);
 
-		var isAdmin = message.member.hasPermission('MANAGE_CHANNELS') || message.author.id === bestPlayer.id;
+		var isAdmin = message.member.hasPermission('MANAGE_CHANNELS') || message.author.id === bestPlayer.id || message.author.bot; //only autopublisher-bot can reach this line
 		var oCommand = commands.find(c => c.sName.toLowerCase() === command);
 		if (oCommand) {
 			fnExecuteCommand(oCommand, isAdmin, message, param, guild);
 		} else if (command === 'help') {
 			fnSendHelp(isAdmin, message, guild)
 		} else if (command === 'uptime') {
-			message.channel.send(this.embedCreator.getShort('Bot up for `' + (Date.now() - startTime) + '` seconds.'));
+			message.channel.send(this.embedCreator.getShort('Bot up for `' + (Date.now() - startTime) / 1000 + '` seconds.'));
 		} else {
 			message.channel.send(this.embedCreator.getShort('The command `' + command + '` doesn\'t exist.'));
 		}
