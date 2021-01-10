@@ -4,7 +4,7 @@ require('express')().listen(35412, () => console.log('testing begins'));
 const client = new (require('discord.js')).Client();
 
 var test = async () => {
-	var c = client.channels.cache.get('797712333635846175');
+	var c = client.channels.cache.get(process.env.TEST_SPAM_CHANNEL);
         await c.send('ap!remove all');
         await c.send('ap!add all');
         await c.send('ap!setprefix ap!');
