@@ -6,10 +6,11 @@
   "scripts": {
     "refresh": "echo \"Error: no test specified\" && exit 1",
     "start": "node -r dotenv/config index.js > log.txt",
-    "stop": "kill -9 $(/home/Max/Scripts/pidByProgram.sh AutoPublisher)",
+    "stop": "kill -9 $(~/Scripts/pidByProgram.sh AutoPublisher)",
     "update": "sh refresh.sh>",
     "restart": "sh restart.sh",
-    "test": "node -r dotenv/config test.js > test_log.txt"
+    "test": "node -r dotenv/config test.js > test_log.txt",
+    "stoptest": "kill -9 $(~/Scripts/pidByProgram.sh AutoPublisherT)"
   },
   "repository": {
     "type": "git",
