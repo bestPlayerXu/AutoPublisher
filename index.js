@@ -11,8 +11,8 @@ process.title = 'AutoPublisher';
 const Discord = require('discord.js');
 const client = new Discord.Client();
 const fs = require('fs');
-//const DBL_API = require('dblapi.js');
-//const dbl = new DBL_API(process.env.DBL_TOKEN, client);
+const DBL_API = require('dblapi.js');
+const dbl = new DBL_API(process.env.DBL_TOKEN, client);
 const EmbedCreator = require('./EmbedCreator.js');
 const adminCommands = require('./commands/admin.js').sort((a, b) => a.sName < b.sName ? -1 : 1);
 const normalCommands = require('./commands/normal.js').sort((a, b) => a.sName < b.sName ? -1 : 1);
@@ -21,16 +21,16 @@ normalCommands.forEach(a => a.bAdmin = false);
 
 const commands = adminCommands.concat(normalCommands);
 
-//dbl.on('posted', () => {
-//	console.log('Server count posted!');
-//});
+dbl.on('posted', () => {
+	console.log('Server count posted!');
+});
 
 var data = JSON.parse(fs.readFileSync('data'));
 
 var bestPlayer_xu;
 
 client.on('ready', async () => {
-//	setInterval(() => dbl.postStats(client.guilds.cache.size), 1800000);
+	setInterval(() => dbl.postStats(client.guilds.cache.size), 1800000);
 	console.log(`Logged in as ${client.user.tag}!`);
 	bestPlayer = await client.users.fetch('556593706313187338');
 	this.embedCreator = new EmbedCreator(bestPlayer.avatarURL(), client.user.avatarURL());
@@ -74,10 +74,14 @@ var fnExecuteCommand = (oCommand, isAdmin, message, param, guild) => {
 			fs.writeFileSync('data', JSON.stringify(data, null, 2));
 		}
 		if (typeof res === 'string') {
-			message.channel.send(this.embedCreator.getShort(res));
+			try {
+				message.channel.send(this.embedCreator.getShort(res))
+			} catch {};
 		} else {
 			res.title = oCommand.sName;
-			message.channel.send(this.embedCreator.getFull(res));
+			try {
+				message.channel.send(this.embedCreator.getFull(res));
+			} catch {};
 		}
 	}
 };
@@ -105,10 +109,15 @@ var fnSendHelp = (isAdmin, message, guild) => {
 		name: 'Support Server',
 		value: 'If you have questions, join our [support server](https://discord.gg/NYCvrdedWz)'
 	});
-	message.channel.send(this.embedCreator.getFull(oHelp));
+	try {
+		message.channel.send(this.embedCreator.getFull(oHelp));
+	} catch {};
 }
 
 client.on('message', async message => {
+	if (!message.guild || !message.guild.me.permissionsIn(message.channel).has('SEND_MESSAGES')) {
+		return;
+	}
 	var guild = data[message.guild.id];
 	if (!guild) {
 		data[message.guild.id] = {
@@ -122,9 +131,11 @@ client.on('message', async message => {
 		if (guild.announcements.find(a => a === message.channel.id)) {
 			var perm = message.guild.me.permissionsIn(message.channel);
 			if (perm.has('SEND_MESSAGES') && perm.has('MANAGE_MESSAGES')) {
-				message.crosspost().catch();
+				try {
+					message.crosspost();
+				} catch {};
 			} else {
-				message.author.send('In order to auto-publish messages in ' + message.guild.name + ' I need:\n\nboth the `SEND_MESSAGES` permission AND the `MANAGE_MESSAGES` permission.\n\nWithout these Discord won\'t let me publish messages.');
+				message.author.send('In order to auto-publish messages in ' + message.guild.name + ' I need:\n\nboth the `SEND_MESSAGES` permission AND the `MANAGE_MESSAGES` permission.\n\nWithout these Discord won\'t let me publish messages.').catch();
 			}
 		}
 		return;
@@ -142,9 +153,13 @@ client.on('message', async message => {
 		} else if (command === 'help') {
 			fnSendHelp(isAdmin, message, guild)
 		} else if (command === 'uptime') {
-			message.channel.send(this.embedCreator.getShort('Bot up for `' + (Date.now() - startTime) / 1000 + '` seconds.'));
+			try {
+				message.channel.send(this.embedCreator.getShort('Bot up for `' + (Date.now() - startTime) / 1000 + '` seconds.'));
+			} catch {};
 		} else {
-			message.channel.send(this.embedCreator.getShort('The command `' + command + '` doesn\'t exist.'));
+			try {
+				message.channel.send(this.embedCreator.getShort('The command `' + command + '` doesn\'t exist.'));
+			} catch {};
 		}
 	}
 });

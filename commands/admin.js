@@ -51,7 +51,7 @@ module.exports = [
 			if (channel === 'all') {
 				var iAnnouncementChannels = dataModel.guild.announcements.length;
 				dataModel.guild.announcements = [];
-				return 'Removed every (`' + iAnnouncementChannels + '`) announcement channels.';
+				return 'Removed every (`' + iAnnouncementChannels + '`) announcement channel.';
 			}
 
 			var c = dataModel.client.channels.cache.get(channel);
