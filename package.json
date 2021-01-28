@@ -4,12 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nohup node -r dotenv/config index.js > log.txt 2> err.or",
+    "start": "node -r dotenv/config index.js > log.txt 2> err.or",
     "stop": "kill -9 $(~/Scripts/pidByProgram.sh AutoPublisher)",
     "update": "sh refresh.sh>",
     "restart": "sh restart.sh",
     "test": "node -r dotenv/config test.js > test_log.txt 2> ver.ror",
-    "stoptest": "kill -9 $(~/Scripts/pidByProgram.sh TAutoPublisher)"
+    "stoptest": "kill -9 $(~/Scripts/pidByProgram.sh TAutoPublishe)"
   },
   "repository": {
     "type": "git",

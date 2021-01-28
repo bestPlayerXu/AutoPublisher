@@ -7,7 +7,7 @@ module.exports = [
         description: 'This is a **bot** that **auto-publishes every message** in an **announcement channel** by either a **bot or a user**.\n\nMight be useful if a bot can\'t publish messages in your announcement channel, either because the bot can\'t do it or you have to pay money.\n',
         fields: [{
           name: 'Invite the bot!',
-          value: '[Discord Bot Invite](https://discord.com/oauth2/authorize?client_id=778256454914015245&permissions=93184&scope=bot)'
+          value: '[Discord Bot Invite](https://discord.com/oauth2/authorize?client_id=778256454914015245&permissions=93184&redirect_uri=https%3A%2F%2Fgithub.com%2FbestPlayerXu%2FAutoPublisher%2Fblob%2Fmaster%2FREADME.md&response_type=code&scope=applications.commands.update%20applications.commands%20bot)'
         }, {
           name: 'Vote for the bot!',
           value: '[Vote here](https://top.gg/bot/778256454914015245/vote)',
@@ -41,13 +41,13 @@ module.exports = [
         if (ownedPermissions.has('MANAGE_MESSAGES')) {
           neededPermissions = neededPermissions.filter(p => !p.startsWith('M'));
         }
-	var hasEnoughPermissions = neededPermissions.length === 0;
-        if (!hasEnoughPermissions) {
-          sDetail = '(needs: ' + neededPermissions.map(p => '`' + p + '`').join(', ') + ' permissions)';
-	  iStatus = 4;
-        } else {
-		iStatus = 2;
-	}
+        var hasEnoughPermissions = neededPermissions.length === 0;
+              if (!hasEnoughPermissions) {
+                sDetail = '(needs: ' + neededPermissions.map(p => '`' + p + '`').join(', ') + ' permissions)';
+          iStatus = 4;
+              } else {
+          iStatus = 2;
+        }
         return { iID: a, iStatus: iStatus, sDetail: sDetail };
       });
       var workingChannels = channels.filter(c => c.iStatus === 2);
@@ -71,9 +71,7 @@ module.exports = [
 					value: 'Add a channel with the `add` command!'
 				});
 			}
-      return {
-        fields: fields
-      };
+      return { fields: fields };
     }
   }, {
     sName: 'Prefix',
@@ -82,6 +80,10 @@ module.exports = [
   }, {
     sName: 'Invite',
     sDescription: 'Get an invite for this bot.',
-    sHelp: 'Invite me [here.](https://discord.com/oauth2/authorize?client_id=778256454914015245&permissions=93184&scope=bot)'
+    sHelp: 'Invite me [here.](https://discord.com/oauth2/authorize?client_id=778256454914015245&permissions=93184&redirect_uri=https%3A%2F%2Fgithub.com%2FbestPlayerXu%2FAutoPublisher%2Fblob%2Fmaster%2FREADME.md&response_type=code&scope=applications.commands.update%20applications.commands%20bot)'
+  }, {
+    sName: 'Uptime',
+    sDescription: 'Shows the uptime of the bot in seconds.',
+    fExecute: dataModel => 'This bot has been up for `' + dataModel.client.uptime / 1000 + '` seconds!'
   }
 ]

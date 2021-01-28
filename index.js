@@ -30,7 +30,26 @@ var data = JSON.parse(fs.readFileSync('data'));
 var bestPlayer_xu;
 
 client.on('ready', async () => {
-	setInterval(() => dbl.postStats(client.guilds.cache.size), 1800000);
+	try {
+		/*client.api.applications(client.user.id).commands.post({ data: {
+			name: 'help',
+			description: 'Get some help to get started.'
+		}});*/
+		client.ws.on('INTERACTION_CREATE', async interaction => {
+			if (interaction.data.name !== 'help') return;
+			try {
+				client.api.interactions(interaction.id, interaction.token).callback.post({
+					data: {
+						type: 4,
+						data: {
+							content: 'All I can help you with is to tell you to type `ap!help` into the chat so I can send you the whole help-embed.'
+						}
+					}
+				});
+			} catch(e) { console.log(e) }
+		});
+	} catch (e) { console.log('Catched an error during new Discord interaction: ' + e) }
+	setInterval(() => {try { dbl.postStats(client.guilds.cache.size) } catch(e) {console.log(e)}}, 1800000);
 	console.log(`Logged in as ${client.user.tag}!`);
 	bestPlayer = await client.users.fetch('556593706313187338');
 	this.embedCreator = new EmbedCreator(bestPlayer.avatarURL(), client.user.avatarURL());
@@ -53,7 +72,7 @@ var fnGetCommandList = aCommand => aCommand.map(c => `\`${c.sName}\`: ${c.sDescr
 
 var fnExecuteCommand = (oCommand, isAdmin, message, param, guild) => {
 	if (oCommand.bAdmin && !isAdmin) {
-		message.channel.send(this.embedCreator.getShort('You need the `MANAGE_CHANNELS` permission for that.'));
+		message.channel.send(this.embedCreator.getShort('You need the `MANAGE_CHANNELS` permission for that.')).catch();
 		return;
 	}
 	if (!param[0] && oCommand.sHelp) {
@@ -74,14 +93,10 @@ var fnExecuteCommand = (oCommand, isAdmin, message, param, guild) => {
 			fs.writeFileSync('data', JSON.stringify(data, null, 2));
 		}
 		if (typeof res === 'string') {
-			try {
-				message.channel.send(this.embedCreator.getShort(res))
-			} catch {};
+			message.channel.send(this.embedCreator.getShort(res)).catch();
 		} else {
 			res.title = oCommand.sName;
-			try {
-				message.channel.send(this.embedCreator.getFull(res));
-			} catch {};
+			message.channel.send(this.embedCreator.getFull(res)).catch();
 		}
 	}
 };
@@ -100,7 +115,6 @@ var fnSendHelp = (isAdmin, message, guild) => {
 	}
 	var commandlist = normalCommands.map(p => p);
 	commandlist.push({ sName: 'Help', sDescription: 'Sends this message.' });
-	commandlist.push({ sName: 'Uptime', sDescription: 'Shows the uptime of the bot in seconds' });
 	oHelp.fields.push({
 		name: 'Commands',
 			value: fnGetCommandList(commandlist)
@@ -109,9 +123,7 @@ var fnSendHelp = (isAdmin, message, guild) => {
 		name: 'Support Server',
 		value: 'If you have questions, join our [support server](https://discord.gg/NYCvrdedWz)'
 	});
-	try {
-		message.channel.send(this.embedCreator.getFull(oHelp));
-	} catch {};
+	message.channel.send(this.embedCreator.getFull(oHelp)).catch();
 }
 
 client.on('message', async message => {
@@ -131,9 +143,7 @@ client.on('message', async message => {
 		if (guild.announcements.find(a => a === message.channel.id)) {
 			var perm = message.guild.me.permissionsIn(message.channel);
 			if (perm.has('SEND_MESSAGES') && perm.has('MANAGE_MESSAGES')) {
-				try {
-					message.crosspost();
-				} catch {};
+				message.crosspost().catch();
 			} else {
 				message.author.send('In order to auto-publish messages in ' + message.guild.name + ' I need:\n\nboth the `SEND_MESSAGES` permission AND the `MANAGE_MESSAGES` permission.\n\nWithout these Discord won\'t let me publish messages.').catch();
 			}
@@ -152,14 +162,8 @@ client.on('message', async message => {
 			fnExecuteCommand(oCommand, isAdmin, message, param, guild);
 		} else if (command === 'help') {
 			fnSendHelp(isAdmin, message, guild)
-		} else if (command === 'uptime') {
-			try {
-				message.channel.send(this.embedCreator.getShort('Bot up for `' + (Date.now() - startTime) / 1000 + '` seconds.'));
-			} catch {};
 		} else {
-			try {
-				message.channel.send(this.embedCreator.getShort('The command `' + command + '` doesn\'t exist.'));
-			} catch {};
+			message.channel.send(this.embedCreator.getShort('The command `' + command + '` doesn\'t exist.')).catch();
 		}
 	}
 });

@@ -6,7 +6,7 @@ module.exports = [
 		fExecute: dataModel => {
 			var channel = dataModel.param[0];
 			var prefix = dataModel.guild.prefix;
-			var announcementChannels = dataModel.client.channels.cache.filter(c => c.guild.id === dataModel.message.guild.id && c.type === 'news').map(c => c.id);
+			var announcementChannels = dataModel.client.channels.cache.filter(c => c.guild && c.guild.id === dataModel.message.guild.id && c.type === 'news').map(c => c.id);
 
 			if (announcementChannels.length === 0) {
 				return {
