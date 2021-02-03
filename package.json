@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node -r dotenv/config index.js > log.txt 2> err.or",
+    "start": "node -r dotenv/config index.js > logs/log.txt 2> logs/err.or",
     "stop": "kill -9 $(~/Scripts/pidByProgram.sh AutoPublisher)",
     "test": "node -r dotenv/config test.js > logs/test_log.txt 2> logs/ver.ror",
     "stoptest": "kill -9 $(~/Scripts/pidByProgram.sh TAutoPublishe)"
