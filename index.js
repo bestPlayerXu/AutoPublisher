@@ -16,9 +16,9 @@ process.on('uncaughtException', err => {
 
 const Discord = require('discord.js');
 const client = new Discord.Client();
-const fs = require('fs');
 const DBL_API = require('dblapi.js');
 const dbl = new DBL_API(process.env.DBL_TOKEN, client);
+const dbConnector = new (require('./dbConnector.js'))();
 const EmbedCreator = require('./EmbedCreator.js');
 const adminCommands = require('./commands/admin.js').sort((a, b) => a.sName < b.sName ? -1 : 1);
 const normalCommands = require('./commands/normal.js').sort((a, b) => a.sName < b.sName ? -1 : 1);
@@ -31,7 +31,6 @@ dbl.on('posted', () => {
 	console.log('Server count posted!');
 });
 
-var data = JSON.parse(fs.readFileSync('data'));
 
 var bestPlayer_xu;
 
@@ -70,8 +69,7 @@ client.on('ready', async () => {
 });
 
 client.on('guildDelete', guild => {
-	delete data[guild.id];
-	fs.writeFileSync('data', JSON.stringify(data, null, 2));
+	dbConnector.removeGuild(guild.id);
 });
 
 var fnGetCommandList = aCommand => aCommand.map(c => `\`${c.sName}\`: ${c.sDescription}`).join('\n');
@@ -90,13 +88,13 @@ var fnExecuteCommand = (oCommand, isAdmin, message, param, guild) => {
 			guild: guild,
 			message: message,
 			client: client,
-			param: param
+			param: param,
+			add: id => dbConnector.addAnnouncementChannel(guild.Id, id),
+			remove: id => dbConnector.removeAnnouncementChannel(id),
+			prefix: prefix => dbConnector.setPrefix(guild.Id, prefix)
 		});
 		if (!res) {
 			return;
-		}
-		if (oCommand.bAdmin) {
-			fs.writeFileSync('data', JSON.stringify(data, null, 2));
 		}
 		if (typeof res === 'string') {
 			message.channel.send(this.embedCreator.getShort(res)).catch();
@@ -136,14 +134,10 @@ client.on('message', async message => {
 	if (!message.guild || !message.guild.me.permissionsIn(message.channel).has('SEND_MESSAGES')) {
 		return;
 	}
-	var guild = data[message.guild.id];
+	var guild = await dbConnector.getGuildById(message.guild.id);
 	if (!guild) {
-		data[message.guild.id] = {
-			announcements: [],
-			prefix: 'ap!'
-		};
-		guild = data[message.guild.id];
-		fs.writeFileSync('data', JSON.stringify(data, null, 2))
+		dbConnector.addGuild(message.guild.id);
+		guild = dbConnector.getGuildById(message.guild.id);
 	}
 	if (message.channel.type === 'news') {
 		if (guild.announcements.find(a => a === message.channel.id)) {

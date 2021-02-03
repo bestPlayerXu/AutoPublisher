@@ -26,6 +26,7 @@ module.exports = [
 			if (channel === 'all') {
 				var iAnnouncementChannelsBefore = dataModel.guild.announcements.length;
 				dataModel.guild.announcements = announcementChannels;
+				announcementChannels.forEach(a => dataModel.add(a));
 				return 'Added `' + (dataModel.guild.announcements.length - iAnnouncementChannelsBefore) + '` new announcement channels.';
 			}
 
@@ -34,7 +35,7 @@ module.exports = [
 				if (dataModel.guild.announcements.find(a => a === channel)) {
 					return 'No need to add channel <#' + channel + '> twice :D';
 				}
-				dataModel.guild.announcements.push(channel);
+				dataModel.add(channel);
 				return 'Successfully added announcement channel <#' + channel + '>';
 			} else {
 				return `<#${channel}> with id ${channel} isn\'t an announcement channel of this server!`;
@@ -50,14 +51,14 @@ module.exports = [
 
 			if (channel === 'all') {
 				var iAnnouncementChannels = dataModel.guild.announcements.length;
-				dataModel.guild.announcements = [];
+				dataModel.guild.announcements.forEach(a => dataModel.remove(a));
 				return 'Removed every (`' + iAnnouncementChannels + '`) announcement channel.';
 			}
 
 			var c = dataModel.client.channels.cache.get(channel);
 			if (c && c.guild.id === dataModel.message.guild.id && c.type === 'news') {
 				if (dataModel.guild.announcements.find(a => a === channel)) {
-					dataModel.guild.announcements = dataModel.guild.announcements.filter(a => a !== channel);
+					dataModel.remove(channel);
 					return 'Successfully removed announcement channel <#' + channel + '>';
 				} else {
 					return '<#' + channel + '> isn\'t even an announcement channel I need to auto-publish!';
@@ -72,7 +73,7 @@ module.exports = [
 		sDescription: 'Changes the prefix of this server.',
 		fExecute: dataModel => {
 			if (dataModel.param.length !== 0) {
-				dataModel.guild.prefix = dataModel.param[0];
+				dataModel.prefix(dataModel.param[0]);
 				return 'Set the prefix to `' + dataModel.param[0] + '`.';
 			}
 			return;
