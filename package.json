@@ -6,9 +6,7 @@
   "scripts": {
     "start": "node -r dotenv/config index.js > log.txt 2> err.or",
     "stop": "kill -9 $(~/Scripts/pidByProgram.sh AutoPublisher)",
-    "update": "sh refresh.sh>",
-    "restart": "sh restart.sh",
-    "test": "node -r dotenv/config test.js > test_log.txt 2> ver.ror",
+    "test": "node -r dotenv/config test.js > logs/test_log.txt 2> logs/ver.ror",
     "stoptest": "kill -9 $(~/Scripts/pidByProgram.sh TAutoPublishe)"
   },
   "repository": {

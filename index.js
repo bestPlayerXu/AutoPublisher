@@ -7,6 +7,12 @@ const startTime = Date.now();
 app.listen(port, () => console.log(`Example app listening at port ${port} so kill it with that port.`));
 
 process.title = 'AutoPublisher';
+process.on('unhandledRejection', (reason, promise) => {
+  console.log('Unhandled rejection at ', promise, `reason: ${err.message}`);
+});
+process.on('uncaughtException', err => {
+  console.log(`Uncaught Exception: ${err.message}`);
+});
 
 const Discord = require('discord.js');
 const client = new Discord.Client();

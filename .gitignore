@@ -2,9 +2,4 @@ data
 package-lock.json
 .env
 node_modules
-log.txt
-test_log.txt
-nohup.out
-err.or
-ver.ror
-up.time
+!logs/*

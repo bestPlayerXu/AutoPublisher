@@ -33,9 +33,9 @@ var uptime = async() => {
 		var ping = collected.first().embeds[0].description.match(/([0-9]+)/g);
 		var latency = ping[0];
 		var api = ping[1];
-		fs.appendFileSync('up.time', '\n' + [ Date.now(), latency, api].join(' '));
+		fs.appendFileSync('logs/up.time', '\n' + [ Date.now(), latency, api].join(' '));
 	}).catch(() => {
-		fs.appendFileSync('up.time', '\n' + Date.now());
+		fs.appendFileSync('logs/up.time', '\n' + Date.now());
 	});
 	setTimeout(uptime, 600000);
 }
