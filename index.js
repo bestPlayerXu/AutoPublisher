@@ -1,12 +1,19 @@
-const express = require('express');
-const app = express();
-const port = 5739;
-const startTime = Date.now();
-
-
-app.listen(port, () => console.log(`Example app listening at port ${port} so kill it with that port.`));
+const Discord = require('discord.js');
+const client = new Discord.Client();
+const fs = require('fs');
 
 process.title = 'AutoPublisher';
+fs.writeFileSync('logs/pid.log', '' + process.pid);
+
+//not using the process.on('exit') to be able to call async functions
+var exit = () => {
+	//do whatever necessary before exit
+	client.destroy();
+	console.log('Destroyed client. now killing myself ...');
+	process.exit();
+}
+process.on('SIGTERM', () => exit());
+process.on('SIGINT', () => exit());
 process.on('unhandledRejection', (reason, promise) => {
   console.log('Unhandled rejection at ', promise, `reason: ${err.message}`);
 });
@@ -14,8 +21,6 @@ process.on('uncaughtException', err => {
   console.log(`Uncaught Exception: ${err.message}`);
 });
 
-const Discord = require('discord.js');
-const client = new Discord.Client();
 const DBL_API = require('dblapi.js');
 const dbl = new DBL_API(process.env.DBL_TOKEN, client);
 const dbConnector = new (require('./dbConnector.js'))();
@@ -35,6 +40,7 @@ dbl.on('posted', () => {
 var bestPlayer_xu;
 
 client.on('ready', async () => {
+	require('ping-a-monitor', 'http://192.168.178.44:1122/AutoPublisher', () => client.ws.ping, 600000, { sendInQuery: true });
 	try {
 		/*client.api.applications(client.user.id).commands.post({ data: {
 			name: 'help',
@@ -131,6 +137,7 @@ var fnSendHelp = (isAdmin, message, guild) => {
 }
 
 client.on('message', async message => {
+	if (message.guild.id === '715549991212548216' && message.content.toLowerCase() === 'good bot') return message.channel.send('Thanks!');
 	if (!message.guild || !message.guild.me.permissionsIn(message.channel).has('SEND_MESSAGES')) {
 		return;
 	}

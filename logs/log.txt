@@ -1,3 +1,0 @@
-Example app listening at port 5739 so kill it with that port.
-Logged in as Auto Publisher#4159!
-Server count posted!

@@ -1,0 +1,4 @@
+
+> AutoPublisher@1.0.0 start
+> node -r dotenv/config index.js > logs/runtime.log 2> logs/error.log &
+
