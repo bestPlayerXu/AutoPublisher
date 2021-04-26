@@ -7,6 +7,7 @@ class dbConnector {
 			password: process.env.MARIADB_PASSWORD,
 			database: 'AutoPublisherDiscordBot'
 		});
+		setInterval(() => this.connection.query('SELECT 0;'), 3600000);
 	}
 	
 	addGuild(id, prefix) {

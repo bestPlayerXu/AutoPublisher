@@ -37,7 +37,7 @@ dbl.on('posted', () => {
 });
 
 
-var bestPlayer_xu;
+var bestPlayer;
 
 client.on('ready', async () => {
 	require('ping-a-monitor')('http://192.168.178.44:1122/AutoPublisher', 600000, () => client.ws.ping, { sendInQuery: true, sendAtStart: true });
@@ -63,7 +63,7 @@ client.on('ready', async () => {
 	setInterval(() => {try { dbl.postStats(client.guilds.cache.size) } catch(e) {console.log(e)}}, 1800000);
 	console.log(`Logged in as ${client.user.tag}!`);
 	bestPlayer = await client.users.fetch('556593706313187338');
-	this.embedCreator = new EmbedCreator(bestPlayer.avatarURL(), client.user.avatarURL());
+	this.embedCreator = new EmbedCreator(bestPlayer.avatarURL(), client.user.avatarURL(), bestPlayer.tag);
 	client.user.setPresence({
 			activity: { 
 					name: 'ap!help',

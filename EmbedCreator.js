@@ -1,7 +1,8 @@
 class EmbedCreator {
-	EmbedCreator(bestPlayerAvatar, botAvatar) {
+	constructor(bestPlayerAvatar, botAvatar, bestPlayerName) {
 		this.bestPlayerAvatar = bestPlayerAvatar;
 		this.botAvatar = botAvatar;
+		this.bestPlayerName = bestPlayerName;
 	}
 
 	getFull(embedObject) {
@@ -17,7 +18,7 @@ class EmbedCreator {
 				description: embedObject.description,
 				fields: embedObject.fields,
 				footer: {
-					text: 'Made by bestPlayer_xu#0702',
+					text: 'Made by ' + this.bestPlayerName,
 					icon_url: this.bestPlayerAvatar
 				}
 			}
