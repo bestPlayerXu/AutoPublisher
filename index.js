@@ -40,7 +40,7 @@ dbl.on('posted', () => {
 var bestPlayer_xu;
 
 client.on('ready', async () => {
-	require('ping-a-monitor', 'http://192.168.178.44:1122/AutoPublisher', () => client.ws.ping, 600000, { sendInQuery: true });
+	require('ping-a-monitor')('http://192.168.178.44:1122/AutoPublisher', 600000, () => client.ws.ping, { sendInQuery: true, sendAtStart: true });
 	try {
 		/*client.api.applications(client.user.id).commands.post({ data: {
 			name: 'help',

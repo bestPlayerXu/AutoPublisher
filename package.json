@@ -24,6 +24,7 @@
     "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "mariadb": "^2.5.2"
+    "mariadb": "^2.5.2",
+    "ping-a-monitor": "^5.0.0"
   }
 }
